@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>bootstrap</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="./css/bootstrap.min.css">
+  <link rel="stylesheet" href="./css/bootstrap-table.css">
+  <script src="./js/jquery.js"></script>
+  <script src="./js/bootstrap.min.js"></script>
+  <script src="./js/bootstrap-table.js"></script>
+
+</head>
+
+<body>
+
+  <button type="button" class="btn btn-danger delet">删除</button>
+  <table data-toggle="table" id="table">
+    <thead>
+      <tr>
+        <th data-checkbox="true"></th>
+        <th>身份</th>
+        <th>姓名</th>
+        <th>价格</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-field="id"></td>
+        <td data-field="name"></td>
+        <td data-field="Price"></td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+<script>
+  $('#table').bootstrapTable({
+    columns: [{
+    }, {
+      field: 'id',
+      title: '身份'
+    }, {
+      field: 'name',
+      title: '姓名'
+    }, {
+      field: 'Price',
+      title: '价格'
+    }],
+    data: [{
+      id: 1,
+      name: '小米',
+      Price: '$1'
+    }, {
+      id: 2,
+      name: '魅族',
+      Price: '$2'
+    }]
+  });
+  let indexArr = [];
+  $('#table').on('check.bs.table', (e, row, element) => { //checkBox选中
+    let index = $(element[0]).data('index');
+    if (!indexArr.includes(index)) {
+      String(index) && indexArr.push(index);
+    }
+  }).on('uncheck.bs.table', (e, row, element) => {  //checkBox取消选中
+    let index = $(element[0]).data('index');
+    if (indexArr.includes(index)) {
+      String(index) && indexArr.splice(indexArr.indexOf(index), 1)
+    }
+  }).on('check-all.bs.table', () => { //checkBox全选中
+    $(`#table tr[data-index]`).each((v, obj) => {
+      if (!indexArr.includes($(obj).data('index'))) {
+        String($(obj).data('index')) && indexArr.push($(obj).data('index'));
+      }
+    })
+  }).on('uncheck-all.bs.table', (e, r) => {//checkBox取消全选中
+    indexArr = []
+  })
+  $('.delet').on('click',()=>{//删除事件
+    indexArr.forEach(v=>{
+      $(`#table tr[data-index=${v}]`).remove();
+    })
+  })
+</script>
+
+</html>
